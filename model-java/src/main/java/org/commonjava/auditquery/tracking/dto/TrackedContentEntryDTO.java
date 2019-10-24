@@ -19,6 +19,8 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO>, Externalizable
@@ -61,6 +63,7 @@ public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO
         this.storeKey = storeKey;
         this.accessChannel = accessChannel;
         this.path = path;
+        this.timestamps = new HashSet<>( Collections.singleton( System.currentTimeMillis() ) );
     }
 
     public String getStoreKey() { return storeKey; }
