@@ -19,11 +19,12 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Set;
 
 public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO>, Externalizable
 {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     /* current artifact repository key info */
     private String storeKey;
@@ -47,6 +48,8 @@ public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO
     private String sha1;
 
     private Long size;
+
+    private Set<Long> timestamps;
 
     public TrackedContentEntryDTO()
     {
@@ -125,6 +128,7 @@ public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO
         out.writeObject( sha256 );
         out.writeObject( sha1 );
         out.writeObject( size );
+        out.writeObject( timestamps );
     }
 
     @Override
@@ -145,5 +149,25 @@ public class TrackedContentEntryDTO implements Comparable<TrackedContentEntryDTO
         sha256 = (String)in.readObject();
         sha1 = (String)in.readObject();
         size = (Long)in.readObject();
+
+        if ( version > 1 )
+        {
+            timestamps = (Set<Long>) in.readObject();
+        }
+    }
+
+    public Set<Long> getTimestamps()
+    {
+        return timestamps;
+    }
+
+    public void setTimestamps( final Set<Long> timestamps )
+    {
+        this.timestamps = timestamps;
+    }
+
+    public void merge( final TrackedContentEntryDTO from )
+    {
+        this.timestamps.addAll( from.getTimestamps() );
     }
 }
